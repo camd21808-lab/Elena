@@ -1,0 +1,13 @@
+rapidocr-onnxruntime
+pymupdf
+playwright
+Pillow
+fastapi
+uvicorn[standard]
+python-multipart
+rq
+redis
+python-dotenv
+pypdf
+reportlab
+cryptography

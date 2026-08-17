@@ -1,0 +1,37 @@
+services:
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+
+  api:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      SCANDE_QUEUE: redis
+      SCANDE_REDIS_URL: redis://redis:6379/0
+      SCANDE_LOCAL_ROOT: /data/de-thi
+      SCANDE_SYSTEM_CHROME: "false"
+    volumes:
+      - de-thi-data:/data
+    depends_on:
+      - redis
+
+  worker:
+    build: .
+    restart: unless-stopped
+    command: ["python", "-m", "rq", "worker", "scan", "--url", "redis://redis:6379/0", "--max-jobs", "2"]
+    environment:
+      SCANDE_QUEUE: redis
+      SCANDE_REDIS_URL: redis://redis:6379/0
+      SCANDE_LOCAL_ROOT: /data/de-thi
+      SCANDE_SYSTEM_CHROME: "false"
+      SCANDE_MAX_CONCURRENT: "2"
+    volumes:
+      - de-thi-data:/data
+    depends_on:
+      - redis
+
+volumes:
+  de-thi-data:

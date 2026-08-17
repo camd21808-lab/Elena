@@ -1,0 +1,55 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+*.spec
+
+# Node
+node_modules/
+.npm
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Env / secrets
+.env
+.env.local
+.env.production
+
+# Data (SQLite DBs, uploaded files)
+*.db
+*.db-wal
+*.db-shm
+data/
+scan-de-data/
+
+# Logs
+*.log
+
+# PostgreSQL (local dev)
+pg17/
+
+# Docker
+.docker/
+
+# Tools (binaries)
+tools/qpdf/bin/*.exe
+tools/qpdf/bin/*.dll
+
+# Archived
+archived/
