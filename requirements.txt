@@ -11,3 +11,4 @@ python-dotenv
 pypdf
 reportlab
 cryptography
+psycopg2-binary
