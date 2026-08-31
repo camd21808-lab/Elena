@@ -1,0 +1,3 @@
+## 2025-05-20 - Custom Dropzones and Select Dropdowns Accessibility
+**Learning:** Custom interactive elements with `role="button"` (such as file upload dropzones) require explicit `aria-label` labels and keyboard listeners that handle both `Enter` and `Space` keys (with `e.preventDefault()` on Space to prevent page scrolling). Custom dropdown select components should also mirror `aria-label` down to their trigger buttons so screen readers announce their purpose accurately.
+**Action:** Always provide `aria-label` on custom select trigger controls and support both `Enter` and `Space` key actions on elements styled as buttons.
