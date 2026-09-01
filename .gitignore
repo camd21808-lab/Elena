@@ -1,55 +1,29 @@
-# Python
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
-.venv/
-venv/
-*.egg-info/
-dist/
-build/
-*.spec
+```
+# Electron build artifacts
+ui/release/
+ui/squashfs-root/
 
-# Node
-node_modules/
-.npm
-*.log
+# Node.js dependencies
+ui/node_modules/
 
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
+# Build outputs
+ui/dist/
+ui/build/
 
-# OS
-.DS_Store
-Thumbs.db
-desktop.ini
+# Temporary files
+ui/*.tmp
+ui/*.log
 
-# Env / secrets
-.env
-.env.local
-.env.production
+# Environment files
+ui/.env
+ui/.env.local
+ui/*.env.*
 
-# Data (SQLite DBs, uploaded files)
-*.db
-*.db-wal
-*.db-shm
-data/
-scan-de-data/
+# IDE files
+ui/.vscode/
+ui/.idea/
 
-# Logs
-*.log
-
-# PostgreSQL (local dev)
-pg17/
-
-# Docker
-.docker/
-
-# Tools (binaries)
-tools/qpdf/bin/*.exe
-tools/qpdf/bin/*.dll
-
-# Archived
-archived/
+# OS files
+ui/.DS_Store
+ui/Thumbs.db
+```
