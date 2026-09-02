@@ -272,6 +272,7 @@ function FieldSelect({ options, value, onChange, ariaLabel, wrapClass }: FieldSe
         className={`ky-trigger field ${open ? 'ky-open' : ''}`}
         aria-haspopup="listbox"
         aria-expanded={open}
+        aria-label={ariaLabel}
         onClick={() => {
           setOpen((o) => !o)
           setHi(options.findIndex((o) => o.value === value))
@@ -495,8 +496,14 @@ function ProtectWizard({
             className="dropzone"
             role="button"
             tabIndex={0}
+            aria-label={file ? `File đã chọn: ${file.name}` : 'Chọn file PDF để bảo vệ'}
             onClick={() => fileRef.current?.click()}
-            onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                fileRef.current?.click()
+              }
+            }}
           >
             {file ? (
               <span className="fname">{file.name}</span>
@@ -1796,6 +1803,7 @@ function SettingsScreen({ user, onLoggedOut }: { user: User; onLoggedOut: () => 
                 type="checkbox"
                 checked={drive?.use_mount ?? true}
                 onChange={(e) => toggleMount(e.target.checked)}
+                aria-label="Dùng thư mục Drive gắn"
               />
               <span className="slider" aria-hidden="true" />
             </label>
@@ -2102,8 +2110,14 @@ function App() {
                 className="dropzone"
                 role="button"
                 tabIndex={0}
+                aria-label={cvFile ? `File đã chọn: ${cvFile.name}` : 'Chọn file để chuyển đổi'}
                 onClick={() => fileRef.current?.click()}
-                onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    fileRef.current?.click()
+                  }
+                }}
               >
                 {cvFile ? (
                   <span className="fname">{cvFile.name}</span>
