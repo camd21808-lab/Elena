@@ -1,0 +1,3 @@
+## 2025-05-18 - Keyboard Navigation and ARIA Labels for Custom Form Elements
+**Learning:** Custom `role="button"` dropzone elements in React were handling `Enter` keypresses but missing `Space` key support, causing page scrolling when focused keyboard users pressed Space. Additionally, custom select dropdown triggers received an `ariaLabel` prop but failed to apply `aria-label` to the trigger `<button>`, leaving screen readers without context for selected values.
+**Action:** Always handle both `Enter` and `Space` (`e.key === ' '`) with `e.preventDefault()` on custom `role="button"` elements, and verify that trigger buttons explicitly receive `aria-label` when `ariaLabel` props are defined.
