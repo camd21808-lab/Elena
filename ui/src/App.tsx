@@ -1166,14 +1166,31 @@ function LibraryScreen() {
   )
 }
 
+function EyeIcon({ visible }: { visible: boolean }) {
+  return visible ? (
+    <svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M2 10s3.5-6 8-6 8 6 8 6-3.5 6-8 6-8-6-8-6z" />
+      <circle cx="10" cy="10" r="2.5" />
+    </svg>
+  ) : (
+    <svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M2 10s3.5-6 8-6 8 6 8 6-3.5 6-8 6-8-6-8-6z" />
+      <circle cx="10" cy="10" r="2.5" />
+      <line x1="3" y1="3" x2="17" y2="17" />
+    </svg>
+  )
+}
+
 function AuthScreen({ onAuthed }: { onAuthed: (user: User) => void }) {
   const [tab, setTab] = useState<'login' | 'register'>('login')
   const [login, setLogin] = useState('')
   const [password, setPassword] = useState('')
+  const [showPw, setShowPw] = useState(false)
   const [email, setEmail] = useState('')
   const [username, setUsername] = useState('')
   const [fullName, setFullName] = useState('')
   const [regPass, setRegPass] = useState('')
+  const [showRegPw, setShowRegPw] = useState(false)
   const [err, setErr] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
 
@@ -1273,19 +1290,31 @@ function AuthScreen({ onAuthed }: { onAuthed: (user: User) => void }) {
         <>
           <input
             className="field"
+            aria-label="Email hoặc username"
             placeholder="Email hoặc username"
             value={login}
             onChange={(e) => setLogin(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && doLogin()}
           />
-          <input
-            className="field"
-            type="password"
-            placeholder="Mật khẩu"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && doLogin()}
-          />
+          <div className="field-pw-wrap">
+            <input
+              className="field"
+              type={showPw ? 'text' : 'password'}
+              aria-label="Mật khẩu"
+              placeholder="Mật khẩu"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && doLogin()}
+            />
+            <button
+              type="button"
+              className="field-pw-toggle"
+              aria-label={showPw ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
+              onClick={() => setShowPw((v) => !v)}
+            >
+              <EyeIcon visible={showPw} />
+            </button>
+          </div>
           {err && <p className="error">{err}</p>}
           <button className="cta" onClick={doLogin} disabled={busy}>
             {busy ? 'Đang đăng nhập…' : 'Đăng nhập'}
@@ -1295,30 +1324,44 @@ function AuthScreen({ onAuthed }: { onAuthed: (user: User) => void }) {
         <>
           <input
             className="field"
+            aria-label="Email"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
           <input
             className="field"
+            aria-label="Username"
             placeholder="Username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
           <input
             className="field"
+            aria-label="Họ tên"
             placeholder="Họ tên"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
           />
-          <input
-            className="field"
-            type="password"
-            placeholder="Mật khẩu (tối thiểu 8 ký tự, gồm chữ và số)"
-            value={regPass}
-            onChange={(e) => setRegPass(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && doRegister()}
-          />
+          <div className="field-pw-wrap">
+            <input
+              className="field"
+              type={showRegPw ? 'text' : 'password'}
+              aria-label="Mật khẩu (tối thiểu 8 ký tự, gồm chữ và số)"
+              placeholder="Mật khẩu (tối thiểu 8 ký tự, gồm chữ và số)"
+              value={regPass}
+              onChange={(e) => setRegPass(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && doRegister()}
+            />
+            <button
+              type="button"
+              className="field-pw-toggle"
+              aria-label={showRegPw ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
+              onClick={() => setShowRegPw((v) => !v)}
+            >
+              <EyeIcon visible={showRegPw} />
+            </button>
+          </div>
           {err && <p className="error">{err}</p>}
           <button className="cta" onClick={doRegister} disabled={busy}>
             {busy ? 'Đang đăng ký…' : 'Tạo tài khoản'}

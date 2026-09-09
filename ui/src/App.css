@@ -1238,6 +1238,43 @@ h1 {
   max-width: 440px;
 }
 
+.field-pw-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.field-pw-wrap .field {
+  padding-right: 2.8rem;
+}
+
+.field-pw-toggle {
+  position: absolute;
+  right: 0.6rem;
+  top: 50%;
+  transform: translateY(calc(-50% - 0.4rem));
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #8a8479;
+  cursor: pointer;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.field-pw-toggle:hover {
+  color: #2b2620;
+  background: rgba(232, 226, 213, 0.5);
+}
+
+.field-pw-toggle:focus-visible {
+  outline: 2px solid #4a7c82;
+  outline-offset: 1px;
+}
+
 .auth-brand {
   display: block;
   font-family: 'Fraunces', Georgia, serif;
