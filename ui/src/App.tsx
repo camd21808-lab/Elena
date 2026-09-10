@@ -272,6 +272,7 @@ function FieldSelect({ options, value, onChange, ariaLabel, wrapClass }: FieldSe
         className={`ky-trigger field ${open ? 'ky-open' : ''}`}
         aria-haspopup="listbox"
         aria-expanded={open}
+        aria-label={ariaLabel}
         onClick={() => {
           setOpen((o) => !o)
           setHi(options.findIndex((o) => o.value === value))
@@ -496,7 +497,12 @@ function ProtectWizard({
             role="button"
             tabIndex={0}
             onClick={() => fileRef.current?.click()}
-            onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                fileRef.current?.click()
+              }
+            }}
           >
             {file ? (
               <span className="fname">{file.name}</span>
@@ -998,8 +1004,10 @@ function LibraryScreen() {
 
       <div className="lib-filters">
         <input
+          type="search"
           className="field"
           placeholder="Tìm trong nội dung đề... (vd: hàm số, phương trình)"
+          aria-label="Tìm kiếm trong nội dung đề"
           value={q}
           onChange={(e) => setQ(e.target.value)}
         />
@@ -2050,6 +2058,7 @@ function App() {
               <input
                 className="field"
                 placeholder="https://www.scribd.com/document/…  (#fullscreen=1)"
+                aria-label="Link tài liệu Scribd hoặc Drive"
                 value={link}
                 onChange={(e) => setLink(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && submitScan()}
@@ -2058,12 +2067,14 @@ function App() {
                 <input
                   className="field"
                   placeholder="Môn học (vd: Giải tích 1)"
+                  aria-label="Môn học"
                   value={mon}
                   onChange={(e) => setMon(e.target.value)}
                 />
                 <input
                   className="field"
                   placeholder="Tên đề (vd: Đề giữa kỳ 2024)"
+                  aria-label="Tên đề"
                   value={tenDe}
                   onChange={(e) => setTenDe(e.target.value)}
                 />
@@ -2103,7 +2114,12 @@ function App() {
                 role="button"
                 tabIndex={0}
                 onClick={() => fileRef.current?.click()}
-                onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    fileRef.current?.click()
+                  }
+                }}
               >
                 {cvFile ? (
                   <span className="fname">{cvFile.name}</span>
@@ -2118,6 +2134,7 @@ function App() {
               <input
                 className="field"
                 placeholder="Môn học (vd: Giải tích 1) — file sẽ lưu vào D:\Chuyen doi\{Môn}"
+                aria-label="Môn học"
                 value={cvMon}
                 onChange={(e) => setCvMon(e.target.value)}
               />
