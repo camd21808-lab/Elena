@@ -495,8 +495,14 @@ function ProtectWizard({
             className="dropzone"
             role="button"
             tabIndex={0}
+            aria-label="Chọn file PDF để bảo vệ"
             onClick={() => fileRef.current?.click()}
-            onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                fileRef.current?.click()
+              }
+            }}
           >
             {file ? (
               <span className="fname">{file.name}</span>
@@ -524,6 +530,7 @@ function ProtectWizard({
                   className="field"
                   type="password"
                   placeholder="Mật khẩu mở file"
+                  aria-label="Mật khẩu mở file"
                   value={pw}
                   onChange={(e) => setPw(e.target.value)}
                 />
@@ -531,6 +538,7 @@ function ProtectWizard({
                   className="field"
                   type="password"
                   placeholder="Nhập lại mật khẩu"
+                  aria-label="Nhập lại mật khẩu"
                   value={pw2}
                   onChange={(e) => setPw2(e.target.value)}
                 />
@@ -565,12 +573,14 @@ function ProtectWizard({
                 <input
                   className="field"
                   placeholder="Nội dung watermark (mặc định: CONFIDENTIAL)"
+                  aria-label="Nội dung watermark"
                   value={wmText}
                   onChange={(e) => setWmText(e.target.value)}
                 />
                 <input
                   className="field"
                   placeholder="Hậu tố (vd: email người nhận)"
+                  aria-label="Hậu tố watermark"
                   value={wmSuffix}
                   onChange={(e) => setWmSuffix(e.target.value)}
                 />
@@ -597,6 +607,7 @@ function ProtectWizard({
                   className="field"
                   rows={4}
                   placeholder={'Một từ khoá mỗi dòng, vd:\n001234567890\n0909123456\n0312345678'}
+                  aria-label="Danh sách từ khoá cần xoá"
                   value={termsText}
                   onChange={(e) => setTermsText(e.target.value)}
                 />
@@ -1000,6 +1011,7 @@ function LibraryScreen() {
         <input
           className="field"
           placeholder="Tìm trong nội dung đề... (vd: hàm số, phương trình)"
+          aria-label="Tìm trong nội dung đề"
           value={q}
           onChange={(e) => setQ(e.target.value)}
         />
@@ -1037,6 +1049,7 @@ function LibraryScreen() {
             <input
               className="field"
               placeholder="Loại (vd: HK1, HSG)"
+              aria-label="Loại"
               value={loai}
               onChange={(e) => setLoai(e.target.value)}
             />
@@ -1117,6 +1130,7 @@ function LibraryScreen() {
                   <input
                     className="field"
                     placeholder="Tên đề"
+                    aria-label="Tên đề"
                     value={edit.ten}
                     onChange={(e) => setEdit({ ...edit, ten: e.target.value })}
                   />
@@ -1124,12 +1138,14 @@ function LibraryScreen() {
                     <input
                       className="field"
                       placeholder="Môn"
+                      aria-label="Môn"
                       value={edit.mon}
                       onChange={(e) => setEdit({ ...edit, mon: e.target.value })}
                     />
                     <input
                       className="field"
                       placeholder="Lớp"
+                      aria-label="Lớp"
                       value={edit.lop}
                       onChange={(e) => setEdit({ ...edit, lop: e.target.value })}
                     />
@@ -1138,12 +1154,14 @@ function LibraryScreen() {
                     <input
                       className="field"
                       placeholder="Năm"
+                      aria-label="Năm"
                       value={edit.nam}
                       onChange={(e) => setEdit({ ...edit, nam: e.target.value })}
                     />
                     <input
                       className="field"
                       placeholder="Loại"
+                      aria-label="Loại"
                       value={edit.loai}
                       onChange={(e) => setEdit({ ...edit, loai: e.target.value })}
                     />
@@ -1274,6 +1292,7 @@ function AuthScreen({ onAuthed }: { onAuthed: (user: User) => void }) {
           <input
             className="field"
             placeholder="Email hoặc username"
+            aria-label="Email hoặc username"
             value={login}
             onChange={(e) => setLogin(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && doLogin()}
@@ -1282,6 +1301,7 @@ function AuthScreen({ onAuthed }: { onAuthed: (user: User) => void }) {
             className="field"
             type="password"
             placeholder="Mật khẩu"
+            aria-label="Mật khẩu"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && doLogin()}
@@ -1296,18 +1316,21 @@ function AuthScreen({ onAuthed }: { onAuthed: (user: User) => void }) {
           <input
             className="field"
             placeholder="Email"
+            aria-label="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
           <input
             className="field"
             placeholder="Username"
+            aria-label="Username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
           <input
             className="field"
             placeholder="Họ tên"
+            aria-label="Họ tên"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
           />
@@ -1315,6 +1338,7 @@ function AuthScreen({ onAuthed }: { onAuthed: (user: User) => void }) {
             className="field"
             type="password"
             placeholder="Mật khẩu (tối thiểu 8 ký tự, gồm chữ và số)"
+            aria-label="Mật khẩu"
             value={regPass}
             onChange={(e) => setRegPass(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && doRegister()}
@@ -1720,6 +1744,7 @@ function SettingsScreen({ user, onLoggedOut }: { user: User; onLoggedOut: () => 
             className="field"
             type="password"
             placeholder="Mật khẩu cũ"
+            aria-label="Mật khẩu cũ"
             value={oldPw}
             onChange={(e) => setOldPw(e.target.value)}
           />
@@ -1727,6 +1752,7 @@ function SettingsScreen({ user, onLoggedOut }: { user: User; onLoggedOut: () => 
             className="field"
             type="password"
             placeholder="Mật khẩu mới (tối thiểu 8 ký tự, gồm chữ và số)"
+            aria-label="Mật khẩu mới"
             value={newPw}
             onChange={(e) => setNewPw(e.target.value)}
           />
@@ -1734,6 +1760,7 @@ function SettingsScreen({ user, onLoggedOut }: { user: User; onLoggedOut: () => 
             className="field"
             type="password"
             placeholder="Nhập lại mật khẩu mới"
+            aria-label="Nhập lại mật khẩu mới"
             value={newPw2}
             onChange={(e) => setNewPw2(e.target.value)}
           />
@@ -1794,6 +1821,7 @@ function SettingsScreen({ user, onLoggedOut }: { user: User; onLoggedOut: () => 
             <label className="switch">
               <input
                 type="checkbox"
+                aria-label="Dùng thư mục Drive gắn"
                 checked={drive?.use_mount ?? true}
                 onChange={(e) => toggleMount(e.target.checked)}
               />
@@ -2050,6 +2078,7 @@ function App() {
               <input
                 className="field"
                 placeholder="https://www.scribd.com/document/…  (#fullscreen=1)"
+                aria-label="Đường dẫn tài liệu Scribd hoặc Google Drive"
                 value={link}
                 onChange={(e) => setLink(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && submitScan()}
@@ -2058,12 +2087,14 @@ function App() {
                 <input
                   className="field"
                   placeholder="Môn học (vd: Giải tích 1)"
+                  aria-label="Môn học"
                   value={mon}
                   onChange={(e) => setMon(e.target.value)}
                 />
                 <input
                   className="field"
                   placeholder="Tên đề (vd: Đề giữa kỳ 2024)"
+                  aria-label="Tên đề"
                   value={tenDe}
                   onChange={(e) => setTenDe(e.target.value)}
                 />
@@ -2102,8 +2133,14 @@ function App() {
                 className="dropzone"
                 role="button"
                 tabIndex={0}
+                aria-label="Chọn file cần chuyển đổi"
                 onClick={() => fileRef.current?.click()}
-                onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    fileRef.current?.click()
+                  }
+                }}
               >
                 {cvFile ? (
                   <span className="fname">{cvFile.name}</span>
@@ -2118,6 +2155,7 @@ function App() {
               <input
                 className="field"
                 placeholder="Môn học (vd: Giải tích 1) — file sẽ lưu vào D:\Chuyen doi\{Môn}"
+                aria-label="Môn học"
                 value={cvMon}
                 onChange={(e) => setCvMon(e.target.value)}
               />
