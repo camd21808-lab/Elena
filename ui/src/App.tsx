@@ -495,8 +495,14 @@ function ProtectWizard({
             className="dropzone"
             role="button"
             tabIndex={0}
+            aria-label="Chọn file PDF để bảo vệ"
             onClick={() => fileRef.current?.click()}
-            onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+                e.preventDefault()
+                fileRef.current?.click()
+              }
+            }}
           >
             {file ? (
               <span className="fname">{file.name}</span>
@@ -984,6 +990,7 @@ function LibraryScreen() {
                   </div>
                   <button
                     className="ghost lib-btn"
+                    aria-label={`Tải "${c.name || c.file_id}" về máy`}
                     onClick={() => downloadCloud(c)}
                     disabled={cloudBusyId === c.file_id}
                   >
@@ -1000,6 +1007,7 @@ function LibraryScreen() {
         <input
           className="field"
           placeholder="Tìm trong nội dung đề... (vd: hàm số, phương trình)"
+          aria-label="Tìm kiếm trong nội dung đề"
           value={q}
           onChange={(e) => setQ(e.target.value)}
         />
@@ -1037,6 +1045,7 @@ function LibraryScreen() {
             <input
               className="field"
               placeholder="Loại (vd: HK1, HSG)"
+              aria-label="Loại đề"
               value={loai}
               onChange={(e) => setLoai(e.target.value)}
             />
@@ -1094,6 +1103,7 @@ function LibraryScreen() {
               <div className="lib-item-actions">
                 <button
                   className="cta link lib-btn"
+                  aria-label={`Tải xuống "${it.ten || fileNameFromPath(it.path)}"`}
                   onClick={() =>
                     downloadFile(`/library/${it.id}/download`, `${(it.ten || fileNameFromPath(it.path)).replace(/\.pdf$/i, '')}.pdf`)
                   }
@@ -1101,14 +1111,27 @@ function LibraryScreen() {
                   Tải xuống
                 </button>
                 {it.root !== 'drive' && !it.cloud_file_id && (driveAvailable || googleLinked) && (
-                  <button className="ghost lib-btn" onClick={() => toDrive(it)} disabled={driveBusyId === it.id}>
+                  <button
+                    className="ghost lib-btn"
+                    aria-label={`Đưa "${it.ten || fileNameFromPath(it.path)}" lên Drive`}
+                    onClick={() => toDrive(it)}
+                    disabled={driveBusyId === it.id}
+                  >
                     {driveBusyId === it.id ? 'Đang đưa lên…' : 'Đưa lên Drive'}
                   </button>
                 )}
-                <button className="ghost lib-btn" onClick={() => startEdit(it)}>
+                <button
+                  className="ghost lib-btn"
+                  aria-label={`Sửa thông tin "${it.ten || fileNameFromPath(it.path)}"`}
+                  onClick={() => startEdit(it)}
+                >
                   Sửa
                 </button>
-                <button className="ghost lib-btn danger" onClick={() => removeItem(it)}>
+                <button
+                  className="ghost lib-btn danger"
+                  aria-label={`Xoá "${it.ten || fileNameFromPath(it.path)}" khỏi kho đề`}
+                  onClick={() => removeItem(it)}
+                >
                   Xoá
                 </button>
               </div>
@@ -1274,6 +1297,7 @@ function AuthScreen({ onAuthed }: { onAuthed: (user: User) => void }) {
           <input
             className="field"
             placeholder="Email hoặc username"
+            aria-label="Email hoặc username"
             value={login}
             onChange={(e) => setLogin(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && doLogin()}
@@ -1282,6 +1306,7 @@ function AuthScreen({ onAuthed }: { onAuthed: (user: User) => void }) {
             className="field"
             type="password"
             placeholder="Mật khẩu"
+            aria-label="Mật khẩu"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && doLogin()}
@@ -1296,18 +1321,21 @@ function AuthScreen({ onAuthed }: { onAuthed: (user: User) => void }) {
           <input
             className="field"
             placeholder="Email"
+            aria-label="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
           <input
             className="field"
             placeholder="Username"
+            aria-label="Username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
           <input
             className="field"
             placeholder="Họ tên"
+            aria-label="Họ tên"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
           />
@@ -1315,6 +1343,7 @@ function AuthScreen({ onAuthed }: { onAuthed: (user: User) => void }) {
             className="field"
             type="password"
             placeholder="Mật khẩu (tối thiểu 8 ký tự, gồm chữ và số)"
+            aria-label="Mật khẩu"
             value={regPass}
             onChange={(e) => setRegPass(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && doRegister()}
@@ -2050,6 +2079,7 @@ function App() {
               <input
                 className="field"
                 placeholder="https://www.scribd.com/document/…  (#fullscreen=1)"
+                aria-label="Link tài liệu"
                 value={link}
                 onChange={(e) => setLink(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && submitScan()}
@@ -2058,12 +2088,14 @@ function App() {
                 <input
                   className="field"
                   placeholder="Môn học (vd: Giải tích 1)"
+                  aria-label="Môn học"
                   value={mon}
                   onChange={(e) => setMon(e.target.value)}
                 />
                 <input
                   className="field"
                   placeholder="Tên đề (vd: Đề giữa kỳ 2024)"
+                  aria-label="Tên đề"
                   value={tenDe}
                   onChange={(e) => setTenDe(e.target.value)}
                 />
@@ -2102,8 +2134,14 @@ function App() {
                 className="dropzone"
                 role="button"
                 tabIndex={0}
+                aria-label="Chọn file để chuyển đổi"
                 onClick={() => fileRef.current?.click()}
-                onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+                    e.preventDefault()
+                    fileRef.current?.click()
+                  }
+                }}
               >
                 {cvFile ? (
                   <span className="fname">{cvFile.name}</span>
@@ -2118,6 +2156,7 @@ function App() {
               <input
                 className="field"
                 placeholder="Môn học (vd: Giải tích 1) — file sẽ lưu vào D:\Chuyen doi\{Môn}"
+                aria-label="Môn học"
                 value={cvMon}
                 onChange={(e) => setCvMon(e.target.value)}
               />
