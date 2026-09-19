@@ -475,7 +475,11 @@ function ProtectWizard({
         {PROTECT_STEPS.map((label, i) => {
           const n = i + 1
           return (
-            <span key={label} className={`step ${step === n ? 'active' : ''} ${step > n ? 'done' : ''}`}>
+            <span
+              key={label}
+              className={`step ${step === n ? 'active' : ''} ${step > n ? 'done' : ''}`}
+              aria-current={step === n ? 'step' : undefined}
+            >
               {n}. {label}
             </span>
           )
@@ -495,8 +499,14 @@ function ProtectWizard({
             className="dropzone"
             role="button"
             tabIndex={0}
+            aria-label={file ? `Đã chọn file: ${file.name}` : 'Chọn file PDF để bảo vệ'}
             onClick={() => fileRef.current?.click()}
-            onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                fileRef.current?.click()
+              }
+            }}
           >
             {file ? (
               <span className="fname">{file.name}</span>
@@ -1094,6 +1104,7 @@ function LibraryScreen() {
               <div className="lib-item-actions">
                 <button
                   className="cta link lib-btn"
+                  aria-label={`Tải xuống ${it.ten || fileNameFromPath(it.path)}`}
                   onClick={() =>
                     downloadFile(`/library/${it.id}/download`, `${(it.ten || fileNameFromPath(it.path)).replace(/\.pdf$/i, '')}.pdf`)
                   }
@@ -1101,14 +1112,27 @@ function LibraryScreen() {
                   Tải xuống
                 </button>
                 {it.root !== 'drive' && !it.cloud_file_id && (driveAvailable || googleLinked) && (
-                  <button className="ghost lib-btn" onClick={() => toDrive(it)} disabled={driveBusyId === it.id}>
+                  <button
+                    className="ghost lib-btn"
+                    aria-label={`Đưa ${it.ten || fileNameFromPath(it.path)} lên Drive`}
+                    onClick={() => toDrive(it)}
+                    disabled={driveBusyId === it.id}
+                  >
                     {driveBusyId === it.id ? 'Đang đưa lên…' : 'Đưa lên Drive'}
                   </button>
                 )}
-                <button className="ghost lib-btn" onClick={() => startEdit(it)}>
+                <button
+                  className="ghost lib-btn"
+                  aria-label={`Sửa thông tin ${it.ten || fileNameFromPath(it.path)}`}
+                  onClick={() => startEdit(it)}
+                >
                   Sửa
                 </button>
-                <button className="ghost lib-btn danger" onClick={() => removeItem(it)}>
+                <button
+                  className="ghost lib-btn danger"
+                  aria-label={`Xoá ${it.ten || fileNameFromPath(it.path)} khỏi kho đề`}
+                  onClick={() => removeItem(it)}
+                >
                   Xoá
                 </button>
               </div>
@@ -2102,8 +2126,14 @@ function App() {
                 className="dropzone"
                 role="button"
                 tabIndex={0}
+                aria-label={cvFile ? `Đã chọn file: ${cvFile.name}` : 'Kéo thả file vào đây hoặc bấm chọn'}
                 onClick={() => fileRef.current?.click()}
-                onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    fileRef.current?.click()
+                  }
+                }}
               >
                 {cvFile ? (
                   <span className="fname">{cvFile.name}</span>
