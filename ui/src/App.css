@@ -382,6 +382,13 @@ h1 {
   outline: none;
 }
 
+.dropzone.is-dragging {
+  border-color: #4a7c82;
+  border-style: solid;
+  background: #edf5ea;
+  box-shadow: 0 0 0 4px rgba(74, 124, 130, 0.15);
+}
+
 .dropzone small {
   color: #b3ac9d;
   font-size: 0.72rem;
