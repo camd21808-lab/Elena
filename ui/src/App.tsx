@@ -316,6 +316,93 @@ interface PreviewRes {
   term_missed: string[]
 }
 
+interface DropZoneProps {
+  file: File | null
+  accept?: string
+  promptText: string
+  subText?: string
+  ariaLabel: string
+  fileRef: React.RefObject<HTMLInputElement | null>
+  onFileSelect: (file: File | null) => void
+}
+
+function DropZone({
+  file,
+  accept,
+  promptText,
+  subText,
+  ariaLabel,
+  fileRef,
+  onFileSelect,
+}: DropZoneProps) {
+  const [isDragging, setIsDragging] = useState(false)
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDragging(true)
+  }
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDragging(false)
+  }
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDragging(false)
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      onFileSelect(e.dataTransfer.files[0])
+    }
+  }
+
+  const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      fileRef.current?.click()
+    }
+  }
+
+  return (
+    <>
+      <input
+        ref={fileRef}
+        type="file"
+        className="hidden-file"
+        accept={accept}
+        onChange={(e) => onFileSelect(e.target.files?.[0] ?? null)}
+      />
+      <div
+        className={`dropzone ${isDragging ? 'is-dragging' : ''}`}
+        role="button"
+        tabIndex={0}
+        aria-label={ariaLabel}
+        onClick={() => fileRef.current?.click()}
+        onKeyDown={handleKeyDown}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+      >
+        {file ? (
+          <span className="fname">{file.name}</span>
+        ) : (
+          <span>
+            {promptText}
+            {subText && (
+              <>
+                <br />
+                <small>{subText}</small>
+              </>
+            )}
+          </span>
+        )}
+      </div>
+    </>
+  )
+}
+
 const PROTECT_STEPS = ['Chọn file', 'Tùy chọn bảo vệ', 'Xem vùng xoá', 'Kết quả']
 
 function ProtectWizard({
@@ -483,32 +570,15 @@ function ProtectWizard({
       </div>
 
       {step === 1 && (
-        <>
-          <input
-            ref={fileRef}
-            type="file"
-            className="hidden-file"
-            accept=".pdf"
-            onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-          />
-          <div
-            className="dropzone"
-            role="button"
-            tabIndex={0}
-            onClick={() => fileRef.current?.click()}
-            onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
-          >
-            {file ? (
-              <span className="fname">{file.name}</span>
-            ) : (
-              <span>
-                Chọn file PDF để bảo vệ
-                <br />
-                <small>Chỉ nhận file .pdf</small>
-              </span>
-            )}
-          </div>
-        </>
+        <DropZone
+          file={file}
+          accept=".pdf"
+          promptText="Kéo thả file PDF vào đây hoặc bấm chọn"
+          subText="Chỉ nhận file .pdf"
+          ariaLabel="Chọn file PDF để bảo vệ"
+          fileRef={fileRef}
+          onFileSelect={setFile}
+        />
       )}
 
       {step === 2 && (
@@ -2091,30 +2161,15 @@ function App() {
                 Chữ chuyển đổi bình thường (vẫn edit được). Ảnh trong file — hình câu hỏi, hình vẽ —
                 được giữ nguyên vẹn và thêm lớp chữ nhận diện (OCR), không bao giờ hỏng hay mất.
               </p>
-              <input
-                ref={fileRef}
-                type="file"
-                className="hidden-file"
+              <DropZone
+                file={cvFile}
                 accept=".docx,.doc,.xlsx,.xls,.pptx,.ppt,.odt,.ods,.odp,.rtf,.txt,.csv,.pdf,.png,.jpg,.jpeg,.webp,.bmp,.tiff,.html"
-                onChange={(e) => setCvFile(e.target.files?.[0] ?? null)}
+                promptText="Kéo thả file vào đây hoặc bấm chọn"
+                subText={SOURCE_EXTS}
+                ariaLabel="Chọn file cần chuyển đổi"
+                fileRef={fileRef}
+                onFileSelect={setCvFile}
               />
-              <div
-                className="dropzone"
-                role="button"
-                tabIndex={0}
-                onClick={() => fileRef.current?.click()}
-                onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
-              >
-                {cvFile ? (
-                  <span className="fname">{cvFile.name}</span>
-                ) : (
-                  <span>
-                    Kéo thả file vào đây hoặc bấm chọn
-                    <br />
-                    <small>{SOURCE_EXTS}</small>
-                  </span>
-                )}
-              </div>
               <input
                 className="field"
                 placeholder="Môn học (vd: Giải tích 1) — file sẽ lưu vào D:\Chuyen doi\{Môn}"
