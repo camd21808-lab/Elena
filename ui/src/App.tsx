@@ -270,6 +270,7 @@ function FieldSelect({ options, value, onChange, ariaLabel, wrapClass }: FieldSe
       <button
         type="button"
         className={`ky-trigger field ${open ? 'ky-open' : ''}`}
+        aria-label={ariaLabel}
         aria-haspopup="listbox"
         aria-expanded={open}
         onClick={() => {
