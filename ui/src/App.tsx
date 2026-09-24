@@ -326,6 +326,25 @@ function ProtectWizard({
   const fileRef = useRef<HTMLInputElement>(null)
   const [step, setStep] = useState(1)
   const [file, setFile] = useState<File | null>(null)
+  const [isDragging, setIsDragging] = useState(false)
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(true)
+  }
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(false)
+  }
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(false)
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      setFile(e.dataTransfer.files[0])
+    }
+  }
 
   const [pwEnabled, setPwEnabled] = useState(false)
   const [pw, setPw] = useState('')
@@ -492,11 +511,20 @@ function ProtectWizard({
             onChange={(e) => setFile(e.target.files?.[0] ?? null)}
           />
           <div
-            className="dropzone"
+            className={`dropzone ${isDragging ? 'drag-active' : ''}`}
             role="button"
             tabIndex={0}
+            aria-label="Chọn hoặc kéo thả file PDF để bảo vệ"
             onClick={() => fileRef.current?.click()}
-            onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                fileRef.current?.click()
+              }
+            }}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
           >
             {file ? (
               <span className="fname">{file.name}</span>
@@ -1794,6 +1822,7 @@ function SettingsScreen({ user, onLoggedOut }: { user: User; onLoggedOut: () => 
             <label className="switch">
               <input
                 type="checkbox"
+                aria-label="Dùng thư mục Drive gắn"
                 checked={drive?.use_mount ?? true}
                 onChange={(e) => toggleMount(e.target.checked)}
               />
@@ -1835,6 +1864,25 @@ function App() {
   const [cvTarget, setCvTarget] = useState('pdf')
   const [cvErr, setCvErr] = useState<string | null>(null)
   const [cvSubmitting, setCvSubmitting] = useState(false)
+  const [cvDragging, setCvDragging] = useState(false)
+
+  const handleCvDragOver = (e: React.DragEvent) => {
+    e.preventDefault()
+    setCvDragging(true)
+  }
+
+  const handleCvDragLeave = (e: React.DragEvent) => {
+    e.preventDefault()
+    setCvDragging(false)
+  }
+
+  const handleCvDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    setCvDragging(false)
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      setCvFile(e.dataTransfer.files[0])
+    }
+  }
 
   const fileRef = useRef<HTMLInputElement>(null)
   const timer = useRef<number | null>(null)
@@ -2099,11 +2147,20 @@ function App() {
                 onChange={(e) => setCvFile(e.target.files?.[0] ?? null)}
               />
               <div
-                className="dropzone"
+                className={`dropzone ${cvDragging ? 'drag-active' : ''}`}
                 role="button"
                 tabIndex={0}
+                aria-label="Chọn hoặc kéo thả file cần chuyển đổi"
                 onClick={() => fileRef.current?.click()}
-                onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    fileRef.current?.click()
+                  }
+                }}
+                onDragOver={handleCvDragOver}
+                onDragLeave={handleCvDragLeave}
+                onDrop={handleCvDrop}
               >
                 {cvFile ? (
                   <span className="fname">{cvFile.name}</span>
