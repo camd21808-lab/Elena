@@ -489,14 +489,22 @@ function ProtectWizard({
             type="file"
             className="hidden-file"
             accept=".pdf"
+            aria-label="Tải lên file PDF cần bảo vệ"
             onChange={(e) => setFile(e.target.files?.[0] ?? null)}
           />
           <div
             className="dropzone"
             role="button"
             tabIndex={0}
+            aria-label="Khu vực chọn file PDF để bảo vệ"
+            aria-describedby={file ? undefined : "protect-dropzone-hint"}
             onClick={() => fileRef.current?.click()}
-            onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                fileRef.current?.click()
+              }
+            }}
           >
             {file ? (
               <span className="fname">{file.name}</span>
@@ -504,7 +512,7 @@ function ProtectWizard({
               <span>
                 Chọn file PDF để bảo vệ
                 <br />
-                <small>Chỉ nhận file .pdf</small>
+                <small id="protect-dropzone-hint">Chỉ nhận file .pdf</small>
               </span>
             )}
           </div>
@@ -2096,14 +2104,22 @@ function App() {
                 type="file"
                 className="hidden-file"
                 accept=".docx,.doc,.xlsx,.xls,.pptx,.ppt,.odt,.ods,.odp,.rtf,.txt,.csv,.pdf,.png,.jpg,.jpeg,.webp,.bmp,.tiff,.html"
+                aria-label="Tải lên file cần chuyển đổi"
                 onChange={(e) => setCvFile(e.target.files?.[0] ?? null)}
               />
               <div
                 className="dropzone"
                 role="button"
                 tabIndex={0}
+                aria-label="Khu vực chọn file cần chuyển đổi"
+                aria-describedby={cvFile ? undefined : "convert-dropzone-hint"}
                 onClick={() => fileRef.current?.click()}
-                onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    fileRef.current?.click()
+                  }
+                }}
               >
                 {cvFile ? (
                   <span className="fname">{cvFile.name}</span>
@@ -2111,7 +2127,7 @@ function App() {
                   <span>
                     Kéo thả file vào đây hoặc bấm chọn
                     <br />
-                    <small>{SOURCE_EXTS}</small>
+                    <small id="convert-dropzone-hint">{SOURCE_EXTS}</small>
                   </span>
                 )}
               </div>
