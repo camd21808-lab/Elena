@@ -272,6 +272,7 @@ function FieldSelect({ options, value, onChange, ariaLabel, wrapClass }: FieldSe
         className={`ky-trigger field ${open ? 'ky-open' : ''}`}
         aria-haspopup="listbox"
         aria-expanded={open}
+        aria-label={ariaLabel}
         onClick={() => {
           setOpen((o) => !o)
           setHi(options.findIndex((o) => o.value === value))
