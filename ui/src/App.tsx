@@ -272,6 +272,7 @@ function FieldSelect({ options, value, onChange, ariaLabel, wrapClass }: FieldSe
         className={`ky-trigger field ${open ? 'ky-open' : ''}`}
         aria-haspopup="listbox"
         aria-expanded={open}
+        aria-label={ariaLabel}
         onClick={() => {
           setOpen((o) => !o)
           setHi(options.findIndex((o) => o.value === value))
@@ -1249,6 +1250,8 @@ function AuthScreen({ onAuthed }: { onAuthed: (user: User) => void }) {
       <div className="tabs" role="tablist">
         <button
           type="button"
+          role="tab"
+          aria-selected={tab === 'login'}
           className={`tab ${tab === 'login' ? 'active' : ''}`}
           onClick={() => {
             setTab('login')
@@ -1259,6 +1262,8 @@ function AuthScreen({ onAuthed }: { onAuthed: (user: User) => void }) {
         </button>
         <button
           type="button"
+          role="tab"
+          aria-selected={tab === 'register'}
           className={`tab ${tab === 'register' ? 'active' : ''}`}
           onClick={() => {
             setTab('register')
