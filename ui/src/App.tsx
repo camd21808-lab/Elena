@@ -203,7 +203,7 @@ interface ToolCardProps {
 
 function ToolCard({ title, desc, icon, onClick }: ToolCardProps) {
   return (
-    <button type="button" className="tool-card" onClick={onClick}>
+    <button type="button" className="tool-card" onClick={onClick} aria-label={`${title} - ${desc}`}>
       {icon}
       <span className="tool-title">{title}</span>
       <span className="tool-desc">{desc}</span>

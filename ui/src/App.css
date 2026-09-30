@@ -534,6 +534,10 @@ h1 {
   box-shadow: 0 14px 34px rgba(46, 92, 99, 0.16);
 }
 
+.tool-card:active {
+  transform: translateY(-1px);
+}
+
 .tool-card:focus-visible {
   outline: 3px solid #4a7c82;
   outline-offset: 2px;
