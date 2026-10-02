@@ -495,6 +495,7 @@ function ProtectWizard({
             className="dropzone"
             role="button"
             tabIndex={0}
+            aria-label="Chọn file PDF để bảo vệ"
             onClick={() => fileRef.current?.click()}
             onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
           >
@@ -613,7 +614,7 @@ function ProtectWizard({
               <p className="sub">
                 Từ khoá cần xoá ({termsList.length}): {termsList.join(', ')}
               </p>
-              {err && <p className="error">{err}</p>}
+              {err && <p className="error" role="alert" aria-live="polite">{err}</p>}
             </>
           ) : (
             <>
@@ -638,14 +639,14 @@ function ProtectWizard({
                     ))}
                   </ul>
                   {checked.size === 0 && (
-                    <p className="warn">Bạn chưa chọn vùng nào — sẽ không xoá gì.</p>
+                    <p className="warn" role="alert" aria-live="polite">Bạn chưa chọn vùng nào — sẽ không xoá gì.</p>
                   )}
                 </>
               ) : (
-                <p className="warn">Không tìm thấy từ khoá nào trong PDF.</p>
+                <p className="warn" role="alert" aria-live="polite">Không tìm thấy từ khoá nào trong PDF.</p>
               )}
               {preview.term_missed.length > 0 && (
-                <p className="warn">Cảnh báo: không tìm thấy {preview.term_missed.join(', ')} trong file.</p>
+                <p className="warn" role="alert" aria-live="polite">Cảnh báo: không tìm thấy {preview.term_missed.join(', ')} trong file.</p>
               )}
             </>
           )}
@@ -665,7 +666,7 @@ function ProtectWizard({
               <li>Không có tuỳ chọn nào — file sẽ được giữ nguyên.</li>
             )}
           </ul>
-          {err && <p className="error">{err}</p>}
+          {err && <p className="error" role="alert" aria-live="polite">{err}</p>}
         </div>
       )}
 
@@ -793,7 +794,10 @@ function LibraryScreen() {
   }, [])
 
   useEffect(() => {
-    if (googleLinked) fetchCloud()
+    if (googleLinked) {
+      // oxlint-disable-next-line react/set-state-in-effect
+      void fetchCloud()
+    }
   }, [googleLinked, fetchCloud])
 
   const fetchItems = useCallback(async () => {
@@ -825,7 +829,8 @@ function LibraryScreen() {
   }, [qDeb, mon, lop, nam, loai, root])
 
   useEffect(() => {
-    fetchItems()
+    // oxlint-disable-next-line react/set-state-in-effect
+    void fetchItems()
   }, [fetchItems])
 
   const rescan = async () => {
@@ -1579,7 +1584,8 @@ function SettingsScreen({ user, onLoggedOut }: { user: User; onLoggedOut: () => 
   }, [])
 
   useEffect(() => {
-    loadSettings()
+    // oxlint-disable-next-line react/set-state-in-effect
+    void loadSettings()
     return () => {
       if (linkTimer.current) window.clearInterval(linkTimer.current)
     }
@@ -2102,6 +2108,7 @@ function App() {
                 className="dropzone"
                 role="button"
                 tabIndex={0}
+                aria-label="Chọn file để chuyển đổi"
                 onClick={() => fileRef.current?.click()}
                 onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
               >
