@@ -495,8 +495,14 @@ function ProtectWizard({
             className="dropzone"
             role="button"
             tabIndex={0}
+            aria-label="Chọn file PDF để bảo vệ"
             onClick={() => fileRef.current?.click()}
-            onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                fileRef.current?.click()
+              }
+            }}
           >
             {file ? (
               <span className="fname">{file.name}</span>
@@ -524,6 +530,7 @@ function ProtectWizard({
                   className="field"
                   type="password"
                   placeholder="Mật khẩu mở file"
+                  aria-label="Mật khẩu mở file"
                   value={pw}
                   onChange={(e) => setPw(e.target.value)}
                 />
@@ -531,6 +538,7 @@ function ProtectWizard({
                   className="field"
                   type="password"
                   placeholder="Nhập lại mật khẩu"
+                  aria-label="Nhập lại mật khẩu"
                   value={pw2}
                   onChange={(e) => setPw2(e.target.value)}
                 />
@@ -1000,6 +1008,7 @@ function LibraryScreen() {
         <input
           className="field"
           placeholder="Tìm trong nội dung đề... (vd: hàm số, phương trình)"
+          aria-label="Tìm trong nội dung đề"
           value={q}
           onChange={(e) => setQ(e.target.value)}
         />
@@ -1796,6 +1805,7 @@ function SettingsScreen({ user, onLoggedOut }: { user: User; onLoggedOut: () => 
                 type="checkbox"
                 checked={drive?.use_mount ?? true}
                 onChange={(e) => toggleMount(e.target.checked)}
+                aria-label="Dùng thư mục Drive gắn"
               />
               <span className="slider" aria-hidden="true" />
             </label>
@@ -2102,8 +2112,14 @@ function App() {
                 className="dropzone"
                 role="button"
                 tabIndex={0}
+                aria-label="Chọn file cần chuyển đổi"
                 onClick={() => fileRef.current?.click()}
-                onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    fileRef.current?.click()
+                  }
+                }}
               >
                 {cvFile ? (
                   <span className="fname">{cvFile.name}</span>
