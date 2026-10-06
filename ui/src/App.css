@@ -745,6 +745,39 @@ h1 {
   margin: 0.2rem 0 0.8rem;
 }
 
+.lib-search-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.6rem;
+}
+
+.lib-search-input {
+  width: 100%;
+  padding-right: 2.2rem;
+}
+
+.lib-search-clear {
+  position: absolute;
+  right: 0.6rem;
+  background: transparent;
+  border: none;
+  color: var(--sub-color, #71717a);
+  cursor: pointer;
+  font-size: 0.9rem;
+  line-height: 1;
+  padding: 0.25rem 0.4rem;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lib-search-clear:hover {
+  color: var(--text-color, #0f172a);
+  background-color: var(--hover-bg, rgba(0, 0, 0, 0.05));
+}
+
 .lib-filter-row {
   display: flex;
   gap: 0.6rem;
