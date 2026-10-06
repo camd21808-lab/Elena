@@ -997,12 +997,25 @@ function LibraryScreen() {
       )}
 
       <div className="lib-filters">
-        <input
-          className="field"
-          placeholder="Tìm trong nội dung đề... (vd: hàm số, phương trình)"
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-        />
+        <div className="lib-search-wrapper">
+          <input
+            className="field lib-search-input"
+            placeholder="Tìm trong nội dung đề... (vd: hàm số, phương trình)"
+            aria-label="Tìm kiếm nội dung đề"
+            value={q}
+            onChange={(e) => setQ(e.target.value)}
+          />
+          {q && (
+            <button
+              type="button"
+              className="lib-search-clear"
+              onClick={() => setQ('')}
+              aria-label="Xoá từ khoá tìm kiếm"
+            >
+              ✕
+            </button>
+          )}
+        </div>
         <div className="lib-filter-row">
           <FieldSelect
             options={countOptions(stats?.by_mon, 'Môn (tất cả)')}
@@ -1037,6 +1050,7 @@ function LibraryScreen() {
             <input
               className="field"
               placeholder="Loại (vd: HK1, HSG)"
+              aria-label="Loại đề"
               value={loai}
               onChange={(e) => setLoai(e.target.value)}
             />
@@ -1094,6 +1108,7 @@ function LibraryScreen() {
               <div className="lib-item-actions">
                 <button
                   className="cta link lib-btn"
+                  aria-label={`Tải xuống ${it.ten || fileNameFromPath(it.path)}`}
                   onClick={() =>
                     downloadFile(`/library/${it.id}/download`, `${(it.ten || fileNameFromPath(it.path)).replace(/\.pdf$/i, '')}.pdf`)
                   }
@@ -1101,14 +1116,27 @@ function LibraryScreen() {
                   Tải xuống
                 </button>
                 {it.root !== 'drive' && !it.cloud_file_id && (driveAvailable || googleLinked) && (
-                  <button className="ghost lib-btn" onClick={() => toDrive(it)} disabled={driveBusyId === it.id}>
+                  <button
+                    className="ghost lib-btn"
+                    aria-label={`Đưa đề ${it.ten || fileNameFromPath(it.path)} lên Drive`}
+                    onClick={() => toDrive(it)}
+                    disabled={driveBusyId === it.id}
+                  >
                     {driveBusyId === it.id ? 'Đang đưa lên…' : 'Đưa lên Drive'}
                   </button>
                 )}
-                <button className="ghost lib-btn" onClick={() => startEdit(it)}>
+                <button
+                  className="ghost lib-btn"
+                  aria-label={`Sửa thông tin ${it.ten || fileNameFromPath(it.path)}`}
+                  onClick={() => startEdit(it)}
+                >
                   Sửa
                 </button>
-                <button className="ghost lib-btn danger" onClick={() => removeItem(it)}>
+                <button
+                  className="ghost lib-btn danger"
+                  aria-label={`Xoá đề ${it.ten || fileNameFromPath(it.path)}`}
+                  onClick={() => removeItem(it)}
+                >
                   Xoá
                 </button>
               </div>
