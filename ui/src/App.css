@@ -375,11 +375,16 @@ h1 {
   transition: border-color 0.18s ease, background 0.18s ease;
 }
 
-.dropzone:hover,
+.dropzone:hover {
+  border-color: #4a7c82;
+  background: #f7faf5;
+}
+
 .dropzone:focus-visible {
   border-color: #4a7c82;
   background: #f7faf5;
-  outline: none;
+  outline: 3px solid #4a7c82;
+  outline-offset: 2px;
 }
 
 .dropzone small {
