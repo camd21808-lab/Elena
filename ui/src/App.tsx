@@ -270,6 +270,7 @@ function FieldSelect({ options, value, onChange, ariaLabel, wrapClass }: FieldSe
       <button
         type="button"
         className={`ky-trigger field ${open ? 'ky-open' : ''}`}
+        aria-label={ariaLabel}
         aria-haspopup="listbox"
         aria-expanded={open}
         onClick={() => {
@@ -496,7 +497,7 @@ function ProtectWizard({
             role="button"
             tabIndex={0}
             onClick={() => fileRef.current?.click()}
-            onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
+            onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') && (e.preventDefault(), fileRef.current?.click())}
           >
             {file ? (
               <span className="fname">{file.name}</span>
@@ -2103,7 +2104,7 @@ function App() {
                 role="button"
                 tabIndex={0}
                 onClick={() => fileRef.current?.click()}
-                onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
+                onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') && (e.preventDefault(), fileRef.current?.click())}
               >
                 {cvFile ? (
                   <span className="fname">{cvFile.name}</span>
