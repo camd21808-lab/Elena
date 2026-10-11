@@ -495,8 +495,9 @@ function ProtectWizard({
             className="dropzone"
             role="button"
             tabIndex={0}
+            aria-label="Chọn file PDF để bảo vệ"
             onClick={() => fileRef.current?.click()}
-            onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
+            onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), fileRef.current?.click())}
           >
             {file ? (
               <span className="fname">{file.name}</span>
@@ -613,7 +614,7 @@ function ProtectWizard({
               <p className="sub">
                 Từ khoá cần xoá ({termsList.length}): {termsList.join(', ')}
               </p>
-              {err && <p className="error">{err}</p>}
+              {err && <p className="error" role="alert">{err}</p>}
             </>
           ) : (
             <>
@@ -665,7 +666,7 @@ function ProtectWizard({
               <li>Không có tuỳ chọn nào — file sẽ được giữ nguyên.</li>
             )}
           </ul>
-          {err && <p className="error">{err}</p>}
+          {err && <p className="error" role="alert">{err}</p>}
         </div>
       )}
 
@@ -969,7 +970,7 @@ function LibraryScreen() {
               {cloud.length > 0 ? `${cloud.length} file chỉ có trên Drive` : 'Không có file nào'}
             </span>
           </div>
-          {cloudErr && <p className="error">{cloudErr}</p>}
+          {cloudErr && <p className="error" role="alert">{cloudErr}</p>}
           {cloud.length > 0 && (
             <ul className="cloud-list">
               {cloud.map((c) => (
@@ -1059,7 +1060,7 @@ function LibraryScreen() {
 
       {rescanMsg && <p className="warn lib-note">{rescanMsg}</p>}
       {driveMsg && <p className="lib-drive-msg">{driveMsg}</p>}
-      {err && <p className="error">{err}</p>}
+      {err && <p className="error" role="alert">{err}</p>}
 
       {loading ? (
         <p className="sub lib-empty">Đang tìm kiếm…</p>
@@ -1286,7 +1287,7 @@ function AuthScreen({ onAuthed }: { onAuthed: (user: User) => void }) {
             onChange={(e) => setPassword(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && doLogin()}
           />
-          {err && <p className="error">{err}</p>}
+          {err && <p className="error" role="alert">{err}</p>}
           <button className="cta" onClick={doLogin} disabled={busy}>
             {busy ? 'Đang đăng nhập…' : 'Đăng nhập'}
           </button>
@@ -1696,7 +1697,7 @@ function SettingsScreen({ user, onLoggedOut }: { user: User; onLoggedOut: () => 
       <p className="sub">Quản lý tài khoản cục bộ, liên kết Google Drive và cách lưu file.</p>
 
       {msg && <p className="lib-drive-msg">{msg}</p>}
-      {err && <p className="error">{err}</p>}
+      {err && <p className="error" role="alert">{err}</p>}
 
       <div className="settings-section">
         <h3>Tài khoản</h3>
@@ -2075,7 +2076,7 @@ function App() {
                   wrapClass="ky-inline"
                 />
               </div>
-              {err && <p className="error">{err}</p>}
+              {err && <p className="error" role="alert">{err}</p>}
               <button className="cta" onClick={submitScan} disabled={submitting}>
                 {submitting ? 'Đang gửi…' : 'Scan đề'}
               </button>
@@ -2102,8 +2103,9 @@ function App() {
                 className="dropzone"
                 role="button"
                 tabIndex={0}
+                aria-label="Chọn file cần chuyển đổi"
                 onClick={() => fileRef.current?.click()}
-                onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
+                onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), fileRef.current?.click())}
               >
                 {cvFile ? (
                   <span className="fname">{cvFile.name}</span>
@@ -2128,7 +2130,7 @@ function App() {
                 ariaLabel="Định dạng đích"
                 wrapClass="ky-block"
               />
-              {cvErr && <p className="error">{cvErr}</p>}
+              {cvErr && <p className="error" role="alert">{cvErr}</p>}
               <button className="cta" onClick={submitConvert} disabled={cvSubmitting}>
                 {cvSubmitting ? 'Đang gửi…' : 'Chuyển đổi file'}
               </button>
