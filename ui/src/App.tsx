@@ -471,16 +471,20 @@ function ProtectWizard({
         vĩnh viễn thông tin nhạy cảm (số CCCD, số điện thoại, mã số thuế…).
       </p>
 
-      <div className="stepper" aria-label="Các bước">
+      <ol className="stepper" aria-label="Các bước bảo vệ PDF">
         {PROTECT_STEPS.map((label, i) => {
           const n = i + 1
           return (
-            <span key={label} className={`step ${step === n ? 'active' : ''} ${step > n ? 'done' : ''}`}>
+            <li
+              key={label}
+              className={`step ${step === n ? 'active' : ''} ${step > n ? 'done' : ''}`}
+              aria-current={step === n ? 'step' : undefined}
+            >
               {n}. {label}
-            </span>
+            </li>
           )
         })}
-      </div>
+      </ol>
 
       {step === 1 && (
         <>
@@ -495,8 +499,14 @@ function ProtectWizard({
             className="dropzone"
             role="button"
             tabIndex={0}
+            aria-label={file ? `File đã chọn: ${file.name}. Bấm để thay đổi.` : 'Chọn file PDF để bảo vệ'}
             onClick={() => fileRef.current?.click()}
-            onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                fileRef.current?.click()
+              }
+            }}
           >
             {file ? (
               <span className="fname">{file.name}</span>
@@ -2102,8 +2112,14 @@ function App() {
                 className="dropzone"
                 role="button"
                 tabIndex={0}
+                aria-label={cvFile ? `File đã chọn: ${cvFile.name}. Bấm để thay đổi.` : 'Chọn file để chuyển đổi'}
                 onClick={() => fileRef.current?.click()}
-                onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    fileRef.current?.click()
+                  }
+                }}
               >
                 {cvFile ? (
                   <span className="fname">{cvFile.name}</span>

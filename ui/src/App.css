@@ -565,6 +565,8 @@ h1 {
   gap: 0.5rem;
   flex-wrap: wrap;
   margin-bottom: 1.6rem;
+  padding: 0;
+  list-style: none;
 }
 
 .step {
