@@ -270,6 +270,7 @@ function FieldSelect({ options, value, onChange, ariaLabel, wrapClass }: FieldSe
       <button
         type="button"
         className={`ky-trigger field ${open ? 'ky-open' : ''}`}
+        aria-label={`${ariaLabel}: ${current?.label ?? value}`}
         aria-haspopup="listbox"
         aria-expanded={open}
         onClick={() => {
@@ -496,7 +497,12 @@ function ProtectWizard({
             role="button"
             tabIndex={0}
             onClick={() => fileRef.current?.click()}
-            onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                fileRef.current?.click()
+              }
+            }}
           >
             {file ? (
               <span className="fname">{file.name}</span>
@@ -1794,6 +1800,7 @@ function SettingsScreen({ user, onLoggedOut }: { user: User; onLoggedOut: () => 
             <label className="switch">
               <input
                 type="checkbox"
+                aria-label="Dùng thư mục Drive gắn"
                 checked={drive?.use_mount ?? true}
                 onChange={(e) => toggleMount(e.target.checked)}
               />
@@ -2103,7 +2110,12 @@ function App() {
                 role="button"
                 tabIndex={0}
                 onClick={() => fileRef.current?.click()}
-                onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    fileRef.current?.click()
+                  }
+                }}
               >
                 {cvFile ? (
                   <span className="fname">{cvFile.name}</span>
