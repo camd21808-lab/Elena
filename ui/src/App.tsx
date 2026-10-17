@@ -194,6 +194,62 @@ function SettingsIcon() {
   )
 }
 
+interface DropzoneProps {
+  file: File | null
+  promptText: ReactNode
+  fileInputRef: React.RefObject<HTMLInputElement | null>
+  onFileSelect: (file: File | null) => void
+}
+
+function Dropzone({ file, promptText, fileInputRef, onFileSelect }: DropzoneProps) {
+  const [isDragging, setIsDragging] = useState(false)
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (!isDragging) setIsDragging(true)
+  }
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    e.stopPropagation()
+    if (e.currentTarget.contains(e.relatedTarget as Node)) return
+    setIsDragging(false)
+  }
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDragging(false)
+    const droppedFile = e.dataTransfer.files?.[0] ?? null
+    if (droppedFile) {
+      onFileSelect(droppedFile)
+    }
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      fileInputRef.current?.click()
+    }
+  }
+
+  return (
+    <div
+      className={`dropzone ${isDragging ? 'dragging' : ''}`}
+      role="button"
+      tabIndex={0}
+      onClick={() => fileInputRef.current?.click()}
+      onKeyDown={handleKeyDown}
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+    >
+      {file ? <span className="fname">{file.name}</span> : promptText}
+    </div>
+  )
+}
+
 interface ToolCardProps {
   title: string
   desc: string
@@ -491,23 +547,18 @@ function ProtectWizard({
             accept=".pdf"
             onChange={(e) => setFile(e.target.files?.[0] ?? null)}
           />
-          <div
-            className="dropzone"
-            role="button"
-            tabIndex={0}
-            onClick={() => fileRef.current?.click()}
-            onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
-          >
-            {file ? (
-              <span className="fname">{file.name}</span>
-            ) : (
+          <Dropzone
+            file={file}
+            fileInputRef={fileRef}
+            onFileSelect={setFile}
+            promptText={
               <span>
                 Chọn file PDF để bảo vệ
                 <br />
                 <small>Chỉ nhận file .pdf</small>
               </span>
-            )}
-          </div>
+            }
+          />
         </>
       )}
 
@@ -2098,23 +2149,18 @@ function App() {
                 accept=".docx,.doc,.xlsx,.xls,.pptx,.ppt,.odt,.ods,.odp,.rtf,.txt,.csv,.pdf,.png,.jpg,.jpeg,.webp,.bmp,.tiff,.html"
                 onChange={(e) => setCvFile(e.target.files?.[0] ?? null)}
               />
-              <div
-                className="dropzone"
-                role="button"
-                tabIndex={0}
-                onClick={() => fileRef.current?.click()}
-                onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
-              >
-                {cvFile ? (
-                  <span className="fname">{cvFile.name}</span>
-                ) : (
+              <Dropzone
+                file={cvFile}
+                fileInputRef={fileRef}
+                onFileSelect={setCvFile}
+                promptText={
                   <span>
                     Kéo thả file vào đây hoặc bấm chọn
                     <br />
                     <small>{SOURCE_EXTS}</small>
                   </span>
-                )}
-              </div>
+                }
+              />
               <input
                 className="field"
                 placeholder="Môn học (vd: Giải tích 1) — file sẽ lưu vào D:\Chuyen doi\{Môn}"
