@@ -495,8 +495,14 @@ function ProtectWizard({
             className="dropzone"
             role="button"
             tabIndex={0}
+            aria-label="Chọn file PDF để bảo vệ"
             onClick={() => fileRef.current?.click()}
-            onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                fileRef.current?.click()
+              }
+            }}
           >
             {file ? (
               <span className="fname">{file.name}</span>
@@ -1270,43 +1276,65 @@ function AuthScreen({ onAuthed }: { onAuthed: (user: User) => void }) {
       </div>
 
       {tab === 'login' ? (
-        <>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault()
+            doLogin()
+          }}
+        >
           <input
             className="field"
+            type="text"
+            aria-label="Email hoặc username"
+            autoComplete="username"
             placeholder="Email hoặc username"
             value={login}
             onChange={(e) => setLogin(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && doLogin()}
           />
           <input
             className="field"
             type="password"
+            aria-label="Mật khẩu"
+            autoComplete="current-password"
             placeholder="Mật khẩu"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && doLogin()}
           />
           {err && <p className="error">{err}</p>}
-          <button className="cta" onClick={doLogin} disabled={busy}>
+          <button type="submit" className="cta" disabled={busy}>
             {busy ? 'Đang đăng nhập…' : 'Đăng nhập'}
           </button>
-        </>
+        </form>
       ) : (
-        <>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault()
+            doRegister()
+          }}
+        >
           <input
             className="field"
+            type="email"
+            aria-label="Email"
+            autoComplete="email"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
           <input
             className="field"
+            type="text"
+            aria-label="Username"
+            autoComplete="username"
             placeholder="Username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
           <input
             className="field"
+            type="text"
+            aria-label="Họ tên"
+            autoComplete="name"
             placeholder="Họ tên"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
@@ -1314,16 +1342,17 @@ function AuthScreen({ onAuthed }: { onAuthed: (user: User) => void }) {
           <input
             className="field"
             type="password"
+            aria-label="Mật khẩu"
+            autoComplete="new-password"
             placeholder="Mật khẩu (tối thiểu 8 ký tự, gồm chữ và số)"
             value={regPass}
             onChange={(e) => setRegPass(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && doRegister()}
           />
           {err && <p className="error">{err}</p>}
-          <button className="cta" onClick={doRegister} disabled={busy}>
+          <button type="submit" className="cta" disabled={busy}>
             {busy ? 'Đang đăng ký…' : 'Tạo tài khoản'}
           </button>
-        </>
+        </form>
       )}
       <p className="disclaimer">Chưa có tài khoản? Dùng tab "Đăng ký" để tạo — miễn phí, không cần mạng.</p>
     </main>
@@ -2102,8 +2131,14 @@ function App() {
                 className="dropzone"
                 role="button"
                 tabIndex={0}
+                aria-label="Chọn file cần chuyển đổi"
                 onClick={() => fileRef.current?.click()}
-                onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    fileRef.current?.click()
+                  }
+                }}
               >
                 {cvFile ? (
                   <span className="fname">{cvFile.name}</span>
