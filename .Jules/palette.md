@@ -1,0 +1,3 @@
+## 2025-05-18 - Keyboard Navigation for Custom Dropzones & Select Triggers
+**Learning:** Custom interactive elements like file dropzones with `role="button"` require explicit `Space` key (`' '`) handling with `e.preventDefault()` alongside `Enter`, as browser default for non-button elements on Space is page scrolling. Additionally, custom trigger buttons for popup lists (`aria-haspopup="listbox"`) must carry `aria-label` directly on the trigger element, not just the popup list.
+**Action:** Always handle both `Enter` and `Space` (`' '`) on `role="button"` elements and ensure `aria-label` is applied directly to the focusable trigger element.
