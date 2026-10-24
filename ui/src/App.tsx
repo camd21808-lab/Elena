@@ -326,6 +326,27 @@ function ProtectWizard({
   const fileRef = useRef<HTMLInputElement>(null)
   const [step, setStep] = useState(1)
   const [file, setFile] = useState<File | null>(null)
+  const [isDragging, setIsDragging] = useState(false)
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDragging(true)
+  }
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDragging(false)
+  }
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDragging(false)
+    const droppedFile = e.dataTransfer.files?.[0]
+    if (droppedFile) setFile(droppedFile)
+  }
 
   const [pwEnabled, setPwEnabled] = useState(false)
   const [pw, setPw] = useState('')
@@ -492,11 +513,19 @@ function ProtectWizard({
             onChange={(e) => setFile(e.target.files?.[0] ?? null)}
           />
           <div
-            className="dropzone"
+            className={`dropzone ${isDragging ? 'dragging' : ''}`}
             role="button"
             tabIndex={0}
             onClick={() => fileRef.current?.click()}
-            onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                fileRef.current?.click()
+              }
+            }}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
           >
             {file ? (
               <span className="fname">{file.name}</span>
@@ -1831,10 +1860,31 @@ function App() {
   const [submitting, setSubmitting] = useState(false)
 
   const [cvFile, setCvFile] = useState<File | null>(null)
+  const [cvDragging, setCvDragging] = useState(false)
   const [cvMon, setCvMon] = useState('')
   const [cvTarget, setCvTarget] = useState('pdf')
   const [cvErr, setCvErr] = useState<string | null>(null)
   const [cvSubmitting, setCvSubmitting] = useState(false)
+
+  const handleCvDragOver = (e: React.DragEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setCvDragging(true)
+  }
+
+  const handleCvDragLeave = (e: React.DragEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setCvDragging(false)
+  }
+
+  const handleCvDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setCvDragging(false)
+    const droppedFile = e.dataTransfer.files?.[0]
+    if (droppedFile) setCvFile(droppedFile)
+  }
 
   const fileRef = useRef<HTMLInputElement>(null)
   const timer = useRef<number | null>(null)
@@ -2099,11 +2149,19 @@ function App() {
                 onChange={(e) => setCvFile(e.target.files?.[0] ?? null)}
               />
               <div
-                className="dropzone"
+                className={`dropzone ${cvDragging ? 'dragging' : ''}`}
                 role="button"
                 tabIndex={0}
                 onClick={() => fileRef.current?.click()}
-                onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    fileRef.current?.click()
+                  }
+                }}
+                onDragOver={handleCvDragOver}
+                onDragLeave={handleCvDragLeave}
+                onDrop={handleCvDrop}
               >
                 {cvFile ? (
                   <span className="fname">{cvFile.name}</span>

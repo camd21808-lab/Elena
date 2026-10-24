@@ -375,6 +375,7 @@ h1 {
   transition: border-color 0.18s ease, background 0.18s ease;
 }
 
+.dropzone.dragging,
 .dropzone:hover,
 .dropzone:focus-visible {
   border-color: #4a7c82;
