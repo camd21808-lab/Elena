@@ -376,7 +376,8 @@ h1 {
 }
 
 .dropzone:hover,
-.dropzone:focus-visible {
+.dropzone:focus-visible,
+.dropzone.is-dragging {
   border-color: #4a7c82;
   background: #f7faf5;
   outline: none;
