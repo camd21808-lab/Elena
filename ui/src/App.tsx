@@ -346,6 +346,7 @@ function ProtectWizard({
   const [redactEnabled, setRedactEnabled] = useState(false)
   const [termsText, setTermsText] = useState('')
 
+  const [isDragging, setIsDragging] = useState(false)
   const [previewing, setPreviewing] = useState(false)
   const [preview, setPreview] = useState<PreviewRes | null>(null)
   const [checked, setChecked] = useState<Set<number>>(new Set())
@@ -492,11 +493,30 @@ function ProtectWizard({
             onChange={(e) => setFile(e.target.files?.[0] ?? null)}
           />
           <div
-            className="dropzone"
+            className={`dropzone ${isDragging ? 'is-dragging' : ''}`}
             role="button"
             tabIndex={0}
             onClick={() => fileRef.current?.click()}
-            onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                fileRef.current?.click()
+              }
+            }}
+            onDragOver={(e) => {
+              e.preventDefault()
+              setIsDragging(true)
+            }}
+            onDragLeave={(e) => {
+              e.preventDefault()
+              setIsDragging(false)
+            }}
+            onDrop={(e) => {
+              e.preventDefault()
+              setIsDragging(false)
+              const dropped = e.dataTransfer.files?.[0]
+              if (dropped) setFile(dropped)
+            }}
           >
             {file ? (
               <span className="fname">{file.name}</span>
@@ -1835,6 +1855,7 @@ function App() {
   const [cvTarget, setCvTarget] = useState('pdf')
   const [cvErr, setCvErr] = useState<string | null>(null)
   const [cvSubmitting, setCvSubmitting] = useState(false)
+  const [cvDragging, setCvDragging] = useState(false)
 
   const fileRef = useRef<HTMLInputElement>(null)
   const timer = useRef<number | null>(null)
@@ -2099,11 +2120,30 @@ function App() {
                 onChange={(e) => setCvFile(e.target.files?.[0] ?? null)}
               />
               <div
-                className="dropzone"
+                className={`dropzone ${cvDragging ? 'is-dragging' : ''}`}
                 role="button"
                 tabIndex={0}
                 onClick={() => fileRef.current?.click()}
-                onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    fileRef.current?.click()
+                  }
+                }}
+                onDragOver={(e) => {
+                  e.preventDefault()
+                  setCvDragging(true)
+                }}
+                onDragLeave={(e) => {
+                  e.preventDefault()
+                  setCvDragging(false)
+                }}
+                onDrop={(e) => {
+                  e.preventDefault()
+                  setCvDragging(false)
+                  const dropped = e.dataTransfer.files?.[0]
+                  if (dropped) setCvFile(dropped)
+                }}
               >
                 {cvFile ? (
                   <span className="fname">{cvFile.name}</span>
