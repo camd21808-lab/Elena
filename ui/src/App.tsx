@@ -272,6 +272,7 @@ function FieldSelect({ options, value, onChange, ariaLabel, wrapClass }: FieldSe
         className={`ky-trigger field ${open ? 'ky-open' : ''}`}
         aria-haspopup="listbox"
         aria-expanded={open}
+        aria-label={ariaLabel}
         onClick={() => {
           setOpen((o) => !o)
           setHi(options.findIndex((o) => o.value === value))
@@ -346,11 +347,27 @@ function ProtectWizard({
   const [redactEnabled, setRedactEnabled] = useState(false)
   const [termsText, setTermsText] = useState('')
 
+  const [isDragging, setIsDragging] = useState(false)
   const [previewing, setPreviewing] = useState(false)
   const [preview, setPreview] = useState<PreviewRes | null>(null)
   const [checked, setChecked] = useState<Set<number>>(new Set())
   const [err, setErr] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(true)
+  }
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(false)
+  }
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragging(false)
+    const droppedFile = e.dataTransfer.files?.[0]
+    if (droppedFile) setFile(droppedFile)
+  }
 
   const termsList = [...new Set(termsText.split('\n').map((t) => t.trim()).filter(Boolean))]
 
@@ -492,11 +509,20 @@ function ProtectWizard({
             onChange={(e) => setFile(e.target.files?.[0] ?? null)}
           />
           <div
-            className="dropzone"
+            className={`dropzone ${isDragging ? 'is-dragging' : ''}`}
             role="button"
             tabIndex={0}
+            aria-label="Chọn hoặc kéo thả file PDF cần bảo vệ"
             onClick={() => fileRef.current?.click()}
-            onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault()
+                fileRef.current?.click()
+              }
+            }}
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
           >
             {file ? (
               <span className="fname">{file.name}</span>
@@ -1831,10 +1857,26 @@ function App() {
   const [submitting, setSubmitting] = useState(false)
 
   const [cvFile, setCvFile] = useState<File | null>(null)
+  const [cvDragging, setCvDragging] = useState(false)
   const [cvMon, setCvMon] = useState('')
   const [cvTarget, setCvTarget] = useState('pdf')
   const [cvErr, setCvErr] = useState<string | null>(null)
   const [cvSubmitting, setCvSubmitting] = useState(false)
+
+  const handleCvDragOver = (e: React.DragEvent) => {
+    e.preventDefault()
+    setCvDragging(true)
+  }
+  const handleCvDragLeave = (e: React.DragEvent) => {
+    e.preventDefault()
+    setCvDragging(false)
+  }
+  const handleCvDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    setCvDragging(false)
+    const droppedFile = e.dataTransfer.files?.[0]
+    if (droppedFile) setCvFile(droppedFile)
+  }
 
   const fileRef = useRef<HTMLInputElement>(null)
   const timer = useRef<number | null>(null)
@@ -2099,11 +2141,20 @@ function App() {
                 onChange={(e) => setCvFile(e.target.files?.[0] ?? null)}
               />
               <div
-                className="dropzone"
+                className={`dropzone ${cvDragging ? 'is-dragging' : ''}`}
                 role="button"
                 tabIndex={0}
+                aria-label="Chọn hoặc kéo thả file cần chuyển đổi"
                 onClick={() => fileRef.current?.click()}
-                onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    fileRef.current?.click()
+                  }
+                }}
+                onDragOver={handleCvDragOver}
+                onDragLeave={handleCvDragLeave}
+                onDrop={handleCvDrop}
               >
                 {cvFile ? (
                   <span className="fname">{cvFile.name}</span>
