@@ -376,10 +376,16 @@ h1 {
 }
 
 .dropzone:hover,
-.dropzone:focus-visible {
+.dropzone:focus-visible,
+.dropzone.dragging {
   border-color: #4a7c82;
-  background: #f7faf5;
+  background: #f0f7f7;
   outline: none;
+}
+
+.dropzone.dragging {
+  border-style: solid;
+  box-shadow: 0 0 0 3px rgba(74, 124, 130, 0.18);
 }
 
 .dropzone small {
