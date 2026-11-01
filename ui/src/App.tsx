@@ -326,6 +326,7 @@ function ProtectWizard({
   const fileRef = useRef<HTMLInputElement>(null)
   const [step, setStep] = useState(1)
   const [file, setFile] = useState<File | null>(null)
+  const [isDragging, setIsDragging] = useState(false)
 
   const [pwEnabled, setPwEnabled] = useState(false)
   const [pw, setPw] = useState('')
@@ -492,17 +493,29 @@ function ProtectWizard({
             onChange={(e) => setFile(e.target.files?.[0] ?? null)}
           />
           <div
-            className="dropzone"
+            className={`dropzone ${isDragging ? 'dragover' : ''}`}
             role="button"
             tabIndex={0}
+            aria-label="Chọn hoặc kéo thả file PDF để bảo vệ"
             onClick={() => fileRef.current?.click()}
-            onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
+            onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') && (e.preventDefault(), fileRef.current?.click())}
+            onDragOver={(e) => {
+              e.preventDefault()
+              setIsDragging(true)
+            }}
+            onDragLeave={() => setIsDragging(false)}
+            onDrop={(e) => {
+              e.preventDefault()
+              setIsDragging(false)
+              const dropped = e.dataTransfer.files?.[0]
+              if (dropped) setFile(dropped)
+            }}
           >
             {file ? (
               <span className="fname">{file.name}</span>
             ) : (
               <span>
-                Chọn file PDF để bảo vệ
+                Chọn hoặc kéo thả file PDF để bảo vệ
                 <br />
                 <small>Chỉ nhận file .pdf</small>
               </span>
@@ -1831,6 +1844,7 @@ function App() {
   const [submitting, setSubmitting] = useState(false)
 
   const [cvFile, setCvFile] = useState<File | null>(null)
+  const [cvDragging, setCvDragging] = useState(false)
   const [cvMon, setCvMon] = useState('')
   const [cvTarget, setCvTarget] = useState('pdf')
   const [cvErr, setCvErr] = useState<string | null>(null)
@@ -2099,11 +2113,23 @@ function App() {
                 onChange={(e) => setCvFile(e.target.files?.[0] ?? null)}
               />
               <div
-                className="dropzone"
+                className={`dropzone ${cvDragging ? 'dragover' : ''}`}
                 role="button"
                 tabIndex={0}
+                aria-label="Kéo thả file vào đây hoặc bấm chọn"
                 onClick={() => fileRef.current?.click()}
-                onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
+                onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') && (e.preventDefault(), fileRef.current?.click())}
+                onDragOver={(e) => {
+                  e.preventDefault()
+                  setCvDragging(true)
+                }}
+                onDragLeave={() => setCvDragging(false)}
+                onDrop={(e) => {
+                  e.preventDefault()
+                  setCvDragging(false)
+                  const dropped = e.dataTransfer.files?.[0]
+                  if (dropped) setCvFile(dropped)
+                }}
               >
                 {cvFile ? (
                   <span className="fname">{cvFile.name}</span>
