@@ -382,6 +382,14 @@ h1 {
   outline: none;
 }
 
+.dropzone.drag-over {
+  border-color: #2e5c63;
+  border-style: solid;
+  background: #eef4ec;
+  color: #2e5c63;
+  transform: scale(1.01);
+}
+
 .dropzone small {
   color: #b3ac9d;
   font-size: 0.72rem;
@@ -391,6 +399,13 @@ h1 {
 .dropzone .fname {
   color: #2b2620;
   font-weight: 600;
+}
+
+.dropzone .fsize {
+  color: #6b8e5a;
+  font-weight: 500;
+  font-size: 0.85rem;
+  margin-left: 0.4rem;
 }
 
 .brief {

@@ -1834,6 +1834,7 @@ function App() {
   const [cvMon, setCvMon] = useState('')
   const [cvTarget, setCvTarget] = useState('pdf')
   const [cvErr, setCvErr] = useState<string | null>(null)
+  const [cvDragging, setCvDragging] = useState(false)
   const [cvSubmitting, setCvSubmitting] = useState(false)
 
   const fileRef = useRef<HTMLInputElement>(null)
@@ -2099,17 +2100,39 @@ function App() {
                 onChange={(e) => setCvFile(e.target.files?.[0] ?? null)}
               />
               <div
-                className="dropzone"
+                className={`dropzone ${cvDragging ? 'drag-over' : ''}`}
                 role="button"
                 tabIndex={0}
+                aria-label={cvFile ? `File đã chọn: ${cvFile.name}. Nhấn để đổi file khác` : 'Kéo thả file vào đây hoặc bấm để chọn file'}
                 onClick={() => fileRef.current?.click()}
-                onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    fileRef.current?.click()
+                  }
+                }}
+                onDragOver={(e) => {
+                  e.preventDefault()
+                  setCvDragging(true)
+                }}
+                onDragLeave={() => setCvDragging(false)}
+                onDrop={(e) => {
+                  e.preventDefault()
+                  setCvDragging(false)
+                  const dropped = e.dataTransfer.files?.[0]
+                  if (dropped) setCvFile(dropped)
+                }}
               >
                 {cvFile ? (
-                  <span className="fname">{cvFile.name}</span>
+                  <>
+                    <span className="fname">{cvFile.name}</span>
+                    <span className="fsize">({formatSize(cvFile.size)})</span>
+                    <br />
+                    <small>Bấm hoặc thả file khác để thay đổi</small>
+                  </>
                 ) : (
                   <span>
-                    Kéo thả file vào đây hoặc bấm chọn
+                    {cvDragging ? 'Thả file vào đây' : 'Kéo thả file vào đây hoặc bấm chọn'}
                     <br />
                     <small>{SOURCE_EXTS}</small>
                   </span>
