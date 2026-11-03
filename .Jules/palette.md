@@ -1,0 +1,3 @@
+## 2025-11-03 - File Dropzone Drag Feedback & Keyboard Accessibility
+**Learning:** Dropzone elements communicating "Kéo thả file vào đây" (Drag & drop file here) need native HTML5 drag-and-drop handlers (`onDragOver`, `onDragLeave`, `onDrop`) along with active visual feedback (`.dragover`), proper `aria-label`, and `Space`/`Enter` keyboard activation to prevent browser-default file opening and ensure seamless accessibility.
+**Action:** Always pair visual dropzone mockups with full HTML5 drag events, visual hover/dragover styling, and standard ARIA button keyboard semantics (`Enter` and `Space`).
