@@ -326,6 +326,7 @@ function ProtectWizard({
   const fileRef = useRef<HTMLInputElement>(null)
   const [step, setStep] = useState(1)
   const [file, setFile] = useState<File | null>(null)
+  const [dragOver, setDragOver] = useState(false)
 
   const [pwEnabled, setPwEnabled] = useState(false)
   const [pw, setPw] = useState('')
@@ -492,11 +493,22 @@ function ProtectWizard({
             onChange={(e) => setFile(e.target.files?.[0] ?? null)}
           />
           <div
-            className="dropzone"
+            className={`dropzone ${dragOver ? 'dropzone-active' : ''}`}
             role="button"
             tabIndex={0}
+            onDragOver={(e) => {
+              e.preventDefault()
+              setDragOver(true)
+            }}
+            onDragLeave={() => setDragOver(false)}
+            onDrop={(e) => {
+              e.preventDefault()
+              setDragOver(false)
+              const dropped = e.dataTransfer.files?.[0]
+              if (dropped) setFile(dropped)
+            }}
             onClick={() => fileRef.current?.click()}
-            onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
+            onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), fileRef.current?.click())}
           >
             {file ? (
               <span className="fname">{file.name}</span>
@@ -1249,6 +1261,8 @@ function AuthScreen({ onAuthed }: { onAuthed: (user: User) => void }) {
       <div className="tabs" role="tablist">
         <button
           type="button"
+          role="tab"
+          aria-selected={tab === 'login'}
           className={`tab ${tab === 'login' ? 'active' : ''}`}
           onClick={() => {
             setTab('login')
@@ -1259,6 +1273,8 @@ function AuthScreen({ onAuthed }: { onAuthed: (user: User) => void }) {
         </button>
         <button
           type="button"
+          role="tab"
+          aria-selected={tab === 'register'}
           className={`tab ${tab === 'register' ? 'active' : ''}`}
           onClick={() => {
             setTab('register')
@@ -1835,6 +1851,7 @@ function App() {
   const [cvTarget, setCvTarget] = useState('pdf')
   const [cvErr, setCvErr] = useState<string | null>(null)
   const [cvSubmitting, setCvSubmitting] = useState(false)
+  const [cvDragOver, setCvDragOver] = useState(false)
 
   const fileRef = useRef<HTMLInputElement>(null)
   const timer = useRef<number | null>(null)
@@ -2099,11 +2116,22 @@ function App() {
                 onChange={(e) => setCvFile(e.target.files?.[0] ?? null)}
               />
               <div
-                className="dropzone"
+                className={`dropzone ${cvDragOver ? 'dropzone-active' : ''}`}
                 role="button"
                 tabIndex={0}
+                onDragOver={(e) => {
+                  e.preventDefault()
+                  setCvDragOver(true)
+                }}
+                onDragLeave={() => setCvDragOver(false)}
+                onDrop={(e) => {
+                  e.preventDefault()
+                  setCvDragOver(false)
+                  const dropped = e.dataTransfer.files?.[0]
+                  if (dropped) setCvFile(dropped)
+                }}
                 onClick={() => fileRef.current?.click()}
-                onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
+                onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), fileRef.current?.click())}
               >
                 {cvFile ? (
                   <span className="fname">{cvFile.name}</span>
