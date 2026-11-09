@@ -382,6 +382,12 @@ h1 {
   outline: none;
 }
 
+.dropzone.is-dragover {
+  border-color: #2e5c63;
+  background: #edf5f3;
+  box-shadow: 0 0 0 2px rgba(46, 92, 99, 0.15);
+}
+
 .dropzone small {
   color: #b3ac9d;
   font-size: 0.72rem;
