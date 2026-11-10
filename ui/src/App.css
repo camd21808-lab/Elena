@@ -1246,14 +1246,16 @@ h1 {
   margin: 0.2rem 0 0.4rem;
 }
 
-/* --- Cài đặt --- */
-.settings-top {
+/* --- Cài đặt & Điều hướng thẻ --- */
+.settings-top,
+.card-top {
   display: flex;
   align-items: center;
   margin-bottom: 0.75rem;
 }
 
-.settings-top .ghost {
+.settings-top .ghost,
+.card-top .ghost {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
