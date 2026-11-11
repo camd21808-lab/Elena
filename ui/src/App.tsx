@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from 'react'
+import { useCallback, useEffect, useRef, useState, type DragEvent, type KeyboardEvent, type ReactNode } from 'react'
 import './App.css'
 
 const API = import.meta.env.VITE_API_BASE ?? ''
@@ -323,6 +323,7 @@ function ProtectWizard({
 }: {
   submitProtect: (file: File, config: unknown) => Promise<string | null>
 }) {
+  const [drag, setDrag] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
   const [step, setStep] = useState(1)
   const [file, setFile] = useState<File | null>(null)
@@ -492,17 +493,25 @@ function ProtectWizard({
             onChange={(e) => setFile(e.target.files?.[0] ?? null)}
           />
           <div
-            className="dropzone"
+            className={`dropzone${drag ? ' is-dragging' : ''}`}
             role="button"
             tabIndex={0}
+            aria-label="Chọn file PDF để bảo vệ"
             onClick={() => fileRef.current?.click()}
-            onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
+            onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), fileRef.current?.click())}
+            onDragOver={(e: DragEvent) => { e.preventDefault(); setDrag(true) }}
+            onDragLeave={(e: DragEvent) => { e.preventDefault(); setDrag(false) }}
+            onDrop={(e: DragEvent) => {
+              e.preventDefault()
+              setDrag(false)
+              if (e.dataTransfer.files?.[0]) setFile(e.dataTransfer.files[0])
+            }}
           >
             {file ? (
               <span className="fname">{file.name}</span>
             ) : (
               <span>
-                Chọn file PDF để bảo vệ
+                Kéo thả file PDF vào đây hoặc bấm chọn
                 <br />
                 <small>Chỉ nhận file .pdf</small>
               </span>
@@ -1831,6 +1840,7 @@ function App() {
   const [submitting, setSubmitting] = useState(false)
 
   const [cvFile, setCvFile] = useState<File | null>(null)
+  const [cvDrag, setCvDrag] = useState(false)
   const [cvMon, setCvMon] = useState('')
   const [cvTarget, setCvTarget] = useState('pdf')
   const [cvErr, setCvErr] = useState<string | null>(null)
@@ -2099,11 +2109,19 @@ function App() {
                 onChange={(e) => setCvFile(e.target.files?.[0] ?? null)}
               />
               <div
-                className="dropzone"
+                className={`dropzone${cvDrag ? ' is-dragging' : ''}`}
                 role="button"
                 tabIndex={0}
+                aria-label="Chọn file cần chuyển đổi"
                 onClick={() => fileRef.current?.click()}
-                onKeyDown={(e) => e.key === 'Enter' && fileRef.current?.click()}
+                onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), fileRef.current?.click())}
+                onDragOver={(e: DragEvent) => { e.preventDefault(); setCvDrag(true) }}
+                onDragLeave={(e: DragEvent) => { e.preventDefault(); setCvDrag(false) }}
+                onDrop={(e: DragEvent) => {
+                  e.preventDefault()
+                  setCvDrag(false)
+                  if (e.dataTransfer.files?.[0]) setCvFile(e.dataTransfer.files[0])
+                }}
               >
                 {cvFile ? (
                   <span className="fname">{cvFile.name}</span>
